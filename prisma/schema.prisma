@@ -29,8 +29,8 @@ model Product {
   stock       Int
   createdAt   DateTime @default(now())
   // Relacionamento: Cada produto tem uma categoria
-  category    Category ? @relation(fields: [categoryId], references: [id])
-  categoryId  Int ?
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId  Int 
 }
 // 
 model Category {

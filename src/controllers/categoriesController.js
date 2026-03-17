@@ -37,7 +37,7 @@ const listCategory = async (req, res) => {
             }
         });
         if (!category) { // Para caso o cliente digite uma categoria n existente
-            return res.status(404).json({ error: 'Categoria n encontrada' });
+        return res.status(404).json({ error: 'Categoria n encontrada' });
         }
         res.json(category)
     } catch (error) {
