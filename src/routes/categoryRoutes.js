@@ -20,4 +20,4 @@ router.patch('/:id', controller.editCategory);
 router.delete('/:id', controller.deleteCategory);
 
 
-module.exports = router; // exportando o router
+module.exports = router // exportando o router
