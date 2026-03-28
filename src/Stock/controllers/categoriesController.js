@@ -1,4 +1,4 @@
-const prisma = require('../lib/prisma'); // importando o prisma
+const prisma = require('../../lib/prisma'); // importando o prisma
 const { z } = require('zod'); // importando o zod
 
 // esquema de validação do produto
@@ -109,4 +109,4 @@ module.exports = {
     listCategory,
     editCategory,
     deleteCategory
-}
+};
