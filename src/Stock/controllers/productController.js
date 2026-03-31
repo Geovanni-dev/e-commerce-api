@@ -50,10 +50,11 @@ const createProduct = async (req, res) => {
     });
     res.json(product);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // se o erro for do zod
-      return res.status(400).json({ error: error.errors[0].message });
-    }
+    if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
+        }
     console.log(error); // se n for do zod
     res.status(500).json({ error: "Erro ao criar o produto" });
   }
@@ -68,7 +69,6 @@ const listAllProducts = async (req, res) => {
         // para mostrar as categorias no produto
         category: true,
       },
-
       where: {
         // para filtrar os produtos por preco e nome
         name: validatedProduct.name
@@ -77,14 +77,12 @@ const listAllProducts = async (req, res) => {
               mode: "insensitive", // serve para n diferenciar maiusculas e minusculas
             }
           : undefined,
-
         price: {
           // definir um valor maximo || minimo
           lte: validatedProduct.maxPrice || undefined,
           gte: validatedProduct.minPrice || undefined,
         },
       },
-
       // ordenaçao de produtos ex; asc (0-9), desc (9-0), name (a-z), name (z-a)
       orderBy:
         validatedProduct.order === "preco_asc"
@@ -96,15 +94,16 @@ const listAllProducts = async (req, res) => {
               : validatedProduct.order === "nome_desc"
                 ? { name: "desc" } /* de z-a*/
                 : undefined,
-
       take: validatedProduct.limit, // limita a quantidade de produtos exibidos na pagina de busca
       skip: (validatedProduct.page - 1) * validatedProduct.limit, // pular a quantidade de produtos exibidos na pagina de busca
     });
     res.json(products);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors[0].message });
-    }
+    if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
+        }
     console.log(error);
     res.status(500).json({ error: "Erro ao listar os produtos" });
   }
@@ -127,10 +126,11 @@ const listProduct = async (req, res) => {
     }
     res.json(product);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // se o erro for do zod
-      return res.status(400).json({ error: error.errors[0].message });
-    }
+    if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
+        }
     console.log(error); // se n for do zod
     res.status(500).json({ error: "Erro ao listar o produto" });
   }
@@ -147,10 +147,11 @@ const editProduct = async (req, res) => {
     });
     res.json(product);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // se o erro for do zod
-      return res.status(400).json({ error: error.errors[0].message });
-    }
+   if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
+        }
     if (error.code === "P2025") {
       // se o erro for do prisma
       return res.status(404).json({ error: "Produto n encontrado" });
@@ -169,10 +170,11 @@ const deleteProduct = async (req, res) => {
     });
     res.json({ message: "Produto deletado com sucesso", product });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // se o erro for do zod
-      return res.status(400).json({ error: error.errors[0].message });
-    }
+   if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
+        }
     if (error.code === "P2025") {
       // se o erro for do prisma
       return res.status(404).json({ error: "Produto não encontrado" });

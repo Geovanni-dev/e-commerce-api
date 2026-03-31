@@ -1,7 +1,10 @@
 const prisma = require("../../lib/prisma"); // importando o prisma
+const emailService = require("../../services/emailService"); // importando o emailService
 const { z } = require("zod"); // importando o zod
 const bcryptjs = require("bcryptjs"); // importando o bcryptjs
 const jwt = require("jsonwebtoken"); // importando o jwt
+const {emailCode, generateCode, validCode} = require("../../services/emailService"); // importando o emailService
+
 
 // esquema de validação do usuario
 const userSchema = z.object({
@@ -26,28 +29,35 @@ const loguinSchema = z.object({
     password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
 });
 
-const deleteUserSchema = z.object({
-    id: z.preprocess((val) => Number(val), z.number().int().positive("ID inválido")),
-});
+// esquema de validação do codigo
+const verifyCodeSchema = z.object({
+    code: z.string().min(6, "O código deve ter pelo menos 6 caracteres"),
+})
 
 
 // funcao assincrona para criar um novo usuario
 const register = async (req, res) => {
     try {
-        const validatedUser = userSchema.parse(req.body); // variavel que recebe os dados validados pelo esquema do zod
-        console.log("Dados validados pelo esquema do zod: "); // imprimindo os dados validados pelo esquema do zod
+        const validatedUser = userSchema.parse(req.body); // variavel que recebe os dados validados pelo esquema do zod 
+        const code = generateCode(); // gerando o codigo
         const password = await bcryptjs.hash(validatedUser.password, 10); // criptografando a senha
         const user = await prisma.user.create({ // criando o usuario
             data: {
                 name: validatedUser.name,
                 email: validatedUser.email,
                 password: password,
+                verificationCode: code,
             },
         });
-        res.status(201).json(user); // imprimindo o usuario criado
+        await emailService.emailCode(user.email, //função para enviar o email com o codigo de verificação
+            "Confirme seu cadastro",
+            `Seu código de verificação é: ${code}`);  
+        res.status(201).json({message: "Usuario criado! Verifique seu e-mail"}); // imprimindo o usuario criado
     } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         console.log(error); // se n for do zod
         res.status(500).json({ error: "Erro ao criar o usuario" });
@@ -76,7 +86,9 @@ const listAllUsers = async (req, res) => {
     res.json(users); // imprimindo os usuarios
     }catch (error) {
         if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         console.log(error); // se n for do zod
         res.status(500).json({ error: "Erro ao listar os usuarios" });
@@ -85,7 +97,7 @@ const listAllUsers = async (req, res) => {
 
 
 // funcao assincrona para listar um usuario pelo id
-const listUserById = async (req, res) => { // funcao assincrona para listar um usuario pelo id
+const listUserById = async (req, res) => { 
     try {
         const id = idSchema.parse(req.params.id); // variavel que recebe o id validado
         const user = await prisma.user.findUnique({ // buscando o usuario no banco de dados
@@ -102,8 +114,10 @@ const listUserById = async (req, res) => { // funcao assincrona para listar um u
         }
         res.json(user); // imprimindo o usuario
     } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         console.log(error); // se n for do zod
         res.status(500).json({ error: "Erro ao listar o usuario" });
@@ -111,38 +125,10 @@ const listUserById = async (req, res) => { // funcao assincrona para listar um u
 }
 
 
-
-// funcao assincrona para logar o usuario
-const login = async (req, res) => {
-    try {
-        const validatedLoguin = loguinSchema.parse(req.body); // variavel que recebe os dados validados pelo esquema do zod
-        console.log("Dados validados pelo esquema do zod: "); // imprimindo os dados validados pelo esquema do zod
-        const user = await prisma.user.findUnique({ // buscando o usuario no banco de dados
-            where: { email: validatedLoguin.email } // recebe o email validado
-        });
-        if (!user) { // se o usuario n for encontrado
-            return res.status(401).json({ error: 'Email ou senha incorretos' });
-        }
-        const passwordValid = await bcryptjs.compare(validatedLoguin.password, user.password); /* comparando a senha digitada com a senha do banco de dados*/
-        if (!passwordValid) { // se a senha n for igual
-            return res.status(401).json({ error: 'Email ou senha incorretos' });
-        }
-        const { password: _, ...userWithoutPassword } = user; // funçao para tirar a senha do usuario
-        const secret = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1d'}); // criando o token
-        res.json({userWithoutPassword, secret}); // imprimindo o usuario sem a senha
-    } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
-        }
-        console.log(error); // se n for do zod
-        res.status(500).json({ error: 'Erro ao logar o usuario' });
-    }
-};
-
 // funcao assincrona para deletar um usuario
 const deleteUser = async (req, res) => {
     try {
-        const { id } = deleteUserSchema.parse(req.params); // variavel que recebe o id validado
+        const id = idSchema.parse(req.params.id); // variavel que recebe o id validado
         const user = await prisma.user.delete({ // deletando o usuario
             where: { id }
         });
@@ -151,8 +137,10 @@ const deleteUser = async (req, res) => {
         if (error instanceof z.ZodError) { // se o erro for do zod
             return res.status(400).json({ error: error.errors[0].message });
         }
-        if (error.code === 'P2025') { // se o erro for do prisma
-            return res.status(404).json({ error: 'Usuario n encontrado' });
+        if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         console.log(error); // se n for do zod nem do prisma
         res.status(500).json({ error: 'Erro ao deletar o usuario' });
@@ -160,7 +148,38 @@ const deleteUser = async (req, res) => {
 };
 
 
+// funcao assincrona para verificar o codigo
+const verifyCode = async (req, res) => {
+    try {
+        const { email, code } = verifyCodeSchema.parse(req.body); // variavel que recebe o codigo validado
+        validCode(code);
+        const user = await prisma.user.findFirst({ // buscando o usuario no banco de dados
+            where: {
+                email: email, 
+                verificationCode: code } // recebe o codigo validado
+        });
+        if (!user) { // se o usuario n for encontrado
+            return res.status(404).json({ error: "Codigo n encontrado" });
+        }
+        await prisma.user.update({ // impede que o codigo seja usado mais de uma vez
+            where: { id: user.id },
+            data: { verificationCode: null, verified: true }, 
+        });
+        res.json({ message: "Codigo verificado com sucesso" });
+    } catch (error) {
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
+        }
+        if (error.code === 'P2025') { // se o erro for do prisma
+            return res.status(404).json({ error: 'Codigo n encontrado' });
+        }
+        console.log(error); // se n for do zod nem do prisma
+        res.status(500).json({ error: 'Erro ao verificar o codigo' });
+    }
+};
 
 
-module.exports = { register , listAllUsers,listUserById, login, deleteUser }; // exportando as funcoes
+module.exports = { register , listAllUsers,listUserById, deleteUser, verifyCode }; // exportando as funcoes
 

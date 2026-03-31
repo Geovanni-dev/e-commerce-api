@@ -25,12 +25,17 @@ const login = async (req, res) => {
         if (!passwordValid) { // se a senha n for igual
             return res.status(401).json({ error: 'Email ou senha incorretos' });
         }
+        if (!user.verified) { // se o usuario n for verificado
+            return res.status(403).json({ error: 'Verifique seu email antes de fazer loguin'});
+        }
         const { password: _, ...userWithoutPassword } = user; // funçao para tirar a senha do usuario
         const secret = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1d'}); // criando o token
         res.json({userWithoutPassword, secret}); // imprimindo o usuario sem a senha
     } catch (error) {
         if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         console.log(error); // se n for do zod
         res.status(500).json({ error: 'Erro ao logar o usuario' });

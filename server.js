@@ -22,7 +22,6 @@ const userRoutes = require('./src/User/Routes/userRoutes');
 app.use('/user', userRoutes); // Usa as rotas de usuarios 
 
 
-
 // Rota de exemplo para testar o servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -16,6 +16,8 @@ model User {
   email     String   @unique
   name      String
   password  String
+  verificationCode String?
+  verified  Boolean  @default(false)
   role      String   @default("CLIENT")
   createdAt DateTime @default(now())
 }

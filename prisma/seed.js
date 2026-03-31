@@ -36,9 +36,10 @@ const createAdmin = async () => {  // funcao assincrona
     });
 console.log(`Admin criado/verificado com sucesso:${admin.email}`); // imprimindo o admin criado
 }  catch (error) { // tratando o erro
-        if (error instanceof z.ZodError) { // se o erro for do zod
-        console.error("Erro de validação:", error.errors[0].message); 
-
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         } else { // se n for do zod
             console.error("Erro no Prisma:", error);
         }

@@ -18,10 +18,11 @@ const createCategory = async (req, res) => {
         });
         res.json(category)
     } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
-
         if (error.code === 'P2002') { // se o erro for do prisma            
             return res.status(409).json({ error: 'Ja existe uma categoria com esse nome' });        
         }
@@ -53,8 +54,10 @@ const listCategory = async (req, res) => {
         }
         res.json(category)
     } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         console.log(error); // se n for do zod
         res.status(500).json({ error: 'Erro ao listar a categoria' });
@@ -72,8 +75,10 @@ const editCategory =  async (req, res) => {
         });
         res.json(category)
     } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+       if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         if (error.code === 'P2025') { // se o erro for do prisma
             return res.status(404).json({ error: 'Categoria n encontrada' });
@@ -92,8 +97,10 @@ const deleteCategory = async (req, res) => {
         });
         res.json(category)
     } catch (error) {
-        if (error instanceof z.ZodError) { // se o erro for do zod
-            return res.status(400).json({ error: error.errors[0].message });
+      if (error instanceof z.ZodError) { // se o erro for do zod
+            return res.status(400).json({ error: "Erro de validação", 
+                detalhes: error.flatten().fieldErrors // funçao para imprimir os erros
+        });
         }
         if (error.code === 'P2025') { // se o erro for do prisma
             return res.status(404).json({ error: 'Categoria n encontrada' });
