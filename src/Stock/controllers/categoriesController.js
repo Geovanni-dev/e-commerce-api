@@ -6,6 +6,7 @@ const categorySchema = z.object({
     name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres")
 });
 
+// esquema de validação do id
 const idSchema = z.preprocess((val) => Number(val), z.number().int().positive("ID inválido")); // esquema de validação do id
 
 

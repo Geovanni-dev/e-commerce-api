@@ -13,10 +13,6 @@ app.use('/store/products', productRoutes); // Usa as rotas dos produtos
 const categoryRoutes = require('./src/Stock/routes/categoryRoutes'); 
 app.use('/store/categories', categoryRoutes); // Usa as rotas das categorias  
 
-// importa a rota de autenticação do admin
-const authRoutes = require('./src/Admin/routes/adminRoutes'); 
-app.use('/auth', authRoutes); // Usa as rotas de autenticação
-
 // importa a rota de usuarios
 const userRoutes = require('./src/User/Routes/userRoutes'); 
 app.use('/user', userRoutes); // Usa as rotas de usuarios 

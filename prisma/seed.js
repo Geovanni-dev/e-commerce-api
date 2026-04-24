@@ -15,7 +15,7 @@ const userSchema = z.object({
 // FUNÇÃO PARA CRIAR O USUARIO ADMIN
 const createAdmin = async () => {  // funcao assincrona
     try {   
-    const validatedUser = userSchema.parse({ // variavel que recebe os dados validados pelo esquema do zod
+    const {name, email, password, role} = userSchema.parse({ // variavel que recebe os dados validados pelo esquema do zod
             name: 'Admin Segundario',
             email: 'admin122@example.com',
             password: 'Admin123',
@@ -23,15 +23,15 @@ const createAdmin = async () => {  // funcao assincrona
     });
     console.log("Dados validados pelo esquema do zod: "); // imprimindo os dados validados pelo esquema do zod
     
-    const password = await bcryptjs.hash(validatedUser.password, 10); // criptografando a senha        
+    const passwordHash = await bcryptjs.hash(password, 10); // criptografando a senha        
     const admin = await prisma.user.upsert({ // adicionando os dados ao banco de dados
-        where: { email: validatedUser.email },// recebe o email validado
+        where: { email },// recebe o email validado
         update: {},
         create: { // criando o admin
-                name: validatedUser.name,
-                email: validatedUser.email,
-                password: password,
-                role: validatedUser.role
+                name,
+                email,
+                password: passwordHash,
+                role
         }
     });
 console.log(`Admin criado/verificado com sucesso:${admin.email}`); // imprimindo o admin criado
