@@ -1,9 +1,15 @@
- require('dotenv').config();    // Carrega as variáveis de ambiente do arquivo .env
+require('dotenv').config();    // Carrega as variáveis de ambiente do arquivo .env
 
 const express = require('express'); // Importa o módulo Express
 
+//importao do rateLimit
+const { globalLimiter } = require('./src/middlewares/rateLimit');
+
 const app = express() // Cria uma instância do Express
 app.use(express.json()); // Middleware para ler JSON no corpo das requisições
+
+
+app.use(globalLimiter); // Usa o middleware globalLimiter
 
 // importa a rota de produtos
 const productRoutes = require('./src/Stock/routes/productRoutes'); 
