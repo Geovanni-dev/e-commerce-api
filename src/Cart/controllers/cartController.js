@@ -47,7 +47,7 @@ const addItemCart = async (req, res) => {
             quantity
         }
     }); 
-    res.json(item); // envia resposta 
+    res.json({message: "Item adicionado ao carrinho com sucesso"}); // envia resposta 
 } catch (error) {
     if (error instanceof z.ZodError) { // se o erro for do zod
             return res.status(400).json({ error: "Erro de validação", 
@@ -74,7 +74,7 @@ const listCart = async (req, res) => {
         if (!cart) {
             return res.status(404).json({ error: "Carrinho não encontrado" });
         }
-        res.json(cart);
+        res.json({message: "Carrinho listado com sucesso", cart});
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Erro ao listar o carrinho" });   
@@ -108,7 +108,7 @@ const editItemCart = async (req, res) => {
             quantity
         }
     });
-    res.json(item);// envia resposta 
+    res.json({message: "Item atualizado com sucesso"});// envia resposta 
     } catch (error) {
         if (error instanceof z.ZodError) { // se o erro for do zod
             return res.status(400).json({ error: "Erro de validação", 
@@ -143,7 +143,7 @@ const removeItemCart = async (req, res) => {
             id
         }
     });
-    res.json(cartItem); // envia resposta
+    res.json({ message: "Item removido com sucesso" }); // envia resposta
     
     } catch (error) {
         if (error instanceof z.ZodError) { // se o erro for do zod

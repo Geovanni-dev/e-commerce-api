@@ -5,9 +5,9 @@ const controller = require("../controllers/cartController"); // importando o con
 // importando o middleware
 const { authMiddleware } = require("../../middlewares/authMiddleware");
 
-// rotas do carrinho
+//=============================== rotas do carrinho
 
-// Rota para criar um novo carrinho
+// Rota para adicionar um item ao carrinho
 router.post("/item", authMiddleware, controller.addItemCart);
 
 // Rota para vizu carrinho

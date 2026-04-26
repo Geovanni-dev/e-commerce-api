@@ -27,6 +27,10 @@ app.use('/user', userRoutes); // Usa as rotas de usuarios
 const cartRoutes = require('./src/Cart/routes/cartRoutes'); 
 app.use('/store/cart', cartRoutes); // Usa as rotas do carrinho
 
+// importa rotas de pedidos
+const orderRoutes = require('./src/Order/routes/orderRoutes');
+app.use('/store/orders', orderRoutes); // Usa as rotas de pedidos
+
 
 // Rota de exemplo para testar o servidor
 const PORT = process.env.PORT || 3000;

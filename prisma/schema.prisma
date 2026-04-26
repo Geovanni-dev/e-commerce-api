@@ -22,6 +22,7 @@ model User {
   resetPasswordToken   String?   @unique
   resetTokenExpiration DateTime?
   cart                 Cart?
+  order                Order[]
 }
 
 // Tabela de Produtos
@@ -37,6 +38,7 @@ model Product {
   categoryId  Int
   //Relacionamento: Um produto pode estar em varios itens do carrinho
   cartItems   CartItem[]
+  orderItem   OrderItem[]
 }
 
 // 
@@ -62,4 +64,24 @@ model CartItem {
   productId Int
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
+}
+
+model Order {
+  id        Int     @id @default(autoincrement())
+  userId    Int     
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+  total     Float
+  items     OrderItem[]
+  status String @default("PENDING")
+}
+  
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
 }
