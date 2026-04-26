@@ -1,45 +1,65 @@
-
 // Configuração do banco
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
-// Gerador do cliente (Padrão para JS)
+// Gerador do cliente
 generator client {
   provider = "prisma-client-js"
 }
 
 // Tabela de Usuários
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  password  String
-  verificationCode String?
-  verified  Boolean  @default(false)
-  role      String   @default("CLIENT")
-  createdAt DateTime @default(now()) 
+  id                   Int       @id @default(autoincrement())
+  email                String    @unique
+  name                 String
+  password             String
+  verificationCode     String?
+  verified             Boolean   @default(false)
+  role                 String    @default("CLIENT")
+  createdAt            DateTime  @default(now())
   resetPasswordToken   String?   @unique
   resetTokenExpiration DateTime?
+  cart                 Cart?
 }
 
 // Tabela de Produtos
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
   description String?
   price       Float
   stock       Int
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
   // Relacionamento: Cada produto tem uma categoria
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId  Int 
+  category    Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId  Int
+  //Relacionamento: Um produto pode estar em varios itens do carrinho
+  cartItems   CartItem[]
 }
+
 // 
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   // Relacionamento: Uma categoria tem muitos produtos
   products Product[]
+}
+
+model Cart {
+  id     Int        @id @default(autoincrement())
+  userId Int        @unique
+  user   User       @relation(fields: [userId], references: [id])
+  //Relacionamento: Um carrinho pode ter varios itens
+  items  CartItem[]
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cartId    Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
 }

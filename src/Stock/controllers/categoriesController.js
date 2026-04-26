@@ -1,6 +1,9 @@
 const prisma = require('../../lib/prisma'); // importando o prisma
 const { z } = require('zod'); // importando o zod
 
+
+//================zod para validar rotas
+
 // esquema de validação do produto
 const categorySchema = z.object({
     name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres")
@@ -9,6 +12,8 @@ const categorySchema = z.object({
 // esquema de validação do id
 const idSchema = z.preprocess((val) => Number(val), z.number().int().positive("ID inválido")); // esquema de validação do id
 
+
+//==========================rotas de categorias
 
 // Rota para criar uma nova categoria (com validação do esquema do zod)
 const createCategory = async (req, res) => {
@@ -111,7 +116,7 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-module.exports = {
+module.exports = { // exportando as funcoes
     createCategory,
     listAllCategories,
     listCategory,

@@ -20,8 +20,12 @@ const categoryRoutes = require('./src/Stock/routes/categoryRoutes');
 app.use('/store/categories', categoryRoutes); // Usa as rotas das categorias  
 
 // importa a rota de usuarios
-const userRoutes = require('./src/User/Routes/userRoutes'); 
+const userRoutes = require('./src/User/routes/userRoutes'); 
 app.use('/user', userRoutes); // Usa as rotas de usuarios 
+
+// importa a rota de carrinho
+const cartRoutes = require('./src/Cart/routes/cartRoutes'); 
+app.use('/store/cart', cartRoutes); // Usa as rotas do carrinho
 
 
 // Rota de exemplo para testar o servidor

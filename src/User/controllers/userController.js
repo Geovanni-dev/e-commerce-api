@@ -48,7 +48,6 @@ const resetPasswordSchema = z.object({
 })
 
 
-
 //================================= funçoes do usuario
 
 
@@ -67,6 +66,11 @@ const register = async (req, res) => {
                 verificationCode: code,
             },
         });
+        await prisma.cart.create({ // criando o carrinho
+            data: {
+                userId: user.id,
+            },
+        });
         await emailCode(user.email, //função para enviar o email com o codigo de verificação
             "Confirme seu cadastro",
             `Seu código de verificação é: ${code}`);  
@@ -80,7 +84,7 @@ const register = async (req, res) => {
         console.log(error); // se n for do zod
         res.status(500).json({ error: "Erro ao criar o usuario" });
     }
-}
+};
 
 
 // funcao assincrona para verificar o codigo

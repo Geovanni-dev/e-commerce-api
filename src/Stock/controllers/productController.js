@@ -1,6 +1,9 @@
 const prisma = require("../../lib/prisma"); // importando o prisma
 const { z } = require("zod"); // importando o zod
 
+
+// ================================= esquemas de validação do zod
+
 // esquema de validação do produto
 const productSchema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -40,6 +43,9 @@ const querySchema = z.object({
     .enum(["preco_asc", "preco_desc", "nome_asc", "nome_desc"])
     .optional(),
 });
+
+//================================= funçoes do produto
+
 
 // Rota para criar um novo produto (com validação do esquema do zod)
 const createProduct = async (req, res) => {
@@ -184,7 +190,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports = { // exportando as funcoes
   createProduct,
   listAllProducts,
   listProduct,
