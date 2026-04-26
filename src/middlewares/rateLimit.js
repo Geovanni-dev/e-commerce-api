@@ -16,7 +16,7 @@ const globalLimiter = rateLimit({
             });
         }
         
-        blockedIps[ip] = now + 60 * 1000; // se o ip estiver bloqueado
+        blockedIps[ip] = now +(5 * 60 * 1000); // bloqueia por 5 minutos
         
             return res.status(429).json({ // envia resposta
                 error: "Muitas tentativas frequeêntes, tente novamente mais tarde"
@@ -38,7 +38,7 @@ const globalLimiter = rateLimit({
                 });
             }
             
-            blockedIps[ip] = now + 60 * 1000; // se o ip estiver bloqueado
+            blockedIps[ip] = now +(5 * 60 * 1000); // bloqueia por 5 minutos
             
                 return res.status(429).json({ // envia resposta
                 error: "Muitas tentativas frequeêntes, tente novamente mais tarde"
