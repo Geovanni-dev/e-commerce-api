@@ -15,6 +15,12 @@ API REST completa para um e-commerce, com fluxo de autenticação, gestão de pr
 
 ---
 
+
+## 🗄️ Diagrama do Banco de Dados
+
+![Diagrama](./public/imagens/diagrama.png)
+
+
 ## 🚀 Instalação e Execução
 
 ```bash
