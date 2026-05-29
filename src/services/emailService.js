@@ -18,7 +18,7 @@ const caracters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678
 const transport = nodemailer.createTransport({
     host: process.env.MAIL_HOST, 
     port: Number(process.env.MAIL_PORT),
-    secure: true, // true para 465, false para outras portas
+    secure: Number(process.env.MAIL_PORT) === 465, // so vira true para a porta 465, outras ports vao ser false
     auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS

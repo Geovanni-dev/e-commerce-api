@@ -1,0 +1,48 @@
+services:
+  # container da API
+  api:
+    build: .
+    # Mapeia a porta 3000 do meu host para a porta 3000 interna do container
+    ports:
+      - "3000:3000"
+
+    # faz o docker ler e injetar as variáveis do arquivo .env local
+    env_file:
+      - .env
+
+    # define variaveis de ambiente especificas pra esse container
+    environment:
+      DATABASE_URL: "${DATABASE_URL}" # URL de conexão interna para a API se comunicar com o container do banco
+
+    # Garante que o container do banco suba antes da API iniciar
+    depends_on:
+      - db
+
+  # Container do banco
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASS}"
+      POSTGRES_DB: "${DB_NAME}"
+
+    #garante que os dados do banco n serão perdidos ao parar o container
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  #Container do pgadmin com a imagem oficial que ta no docker hub
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80" #porta que a interface do pgadmin vai rodar
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_EMAIL}" # email de acesso ao pgadmin
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_PASS}" # senha de acesso ao pgadmin
+    depends_on:
+      - db
+
+#cria o volume nomeado para persistir os dados do Postgres no meu host
+volumes:
+  pgdata: # nome do volume

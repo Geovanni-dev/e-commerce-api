@@ -5,46 +5,44 @@
   <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/>
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white"/>
   <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
   <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white"/>
   <img src="https://img.shields.io/badge/Zod-3E6B9E?style=for-the-badge&logo=zod&logoColor=white"/>
 </p>
 
 ## 📋 Sobre
 
-API REST completa para um e-commerce, com fluxo de autenticação, gestão de produtos e categorias, carrinho de compras e finalização de pedidos. O projeto conta com validação de dados utilizando **Zod**, autenticação via **JWT**, envio de e-mails com **Nodemailer** e ORM **Prisma** com banco de dados **PostgreSQL**.
+API RESTful completa para um e-commerce, com fluxo de autenticação, gestão de produtos e categorias, carrinho de compras e finalização de pedidos. O projeto conta com validação de dados utilizando **Zod**, autenticação via **JWT**, envio de e-mails com **Nodemailer** e ORM **Prisma** com banco de dados **PostgreSQL**. Toda a infraestrutura está containerizada com **Docker**, incluindo painel administrativo **pgAdmin**.
 
 ---
-
 
 ## 🗄️ Diagrama do Banco de Dados
 
 ![Diagrama](./public/imagens/diagrama.png)
 
+## 🚀 Instalação e Execução (Docker)
 
-## 🚀 Instalação e Execução
+Certifique-se de ter o [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e rodando na sua máquina.
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/e-commerce-api.git
+git clone [https://github.com/seu-usuario/e-commerce-api.git](https://github.com/seu-usuario/e-commerce-api.git)
+cd e-commerce-api
 
-# 2. Instale as dependências
-npm install
+# 2. Configure as variáveis de ambiente
+# Copie o arquivo .env.example para .env e preencha com seus dados
+cp .env.example .env
 
-# 3. Configure o arquivo .env
-# Crie um arquivo .env na raiz com as seguintes chaves:
-DATABASE_URL="postgresql://usuario:senha@localhost:5432/ecommerce_db"
-JWT_SECRET=sua_chave_secreta
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=465
-MAIL_USER=seu_email@gmail.com
-MAIL_PASS=sua_senha_de_app
+# 3. Suba a infraestrutura (API, Banco e pgAdmin)
+docker-compose up -d --build
 
-# 4. Rode as migrations do banco
-npx prisma migrate dev
-
-# 5. Inicie o servidor
-npm start
+# 4. Gere as tabelas no banco de dados
+docker-compose exec api npx prisma migrate dev
 ```
+
+### 🌐 Acessos Locais:
+* **API:** `http://localhost:3000`
+* **pgAdmin (Banco de Dados):** `http://localhost:8080` (Acesse com as credenciais definidas no `.env`)
 
 > ⚠️ *Rotas protegidas exigem o Header:*
 > `Authorization: Bearer <seu_token_jwt>`
@@ -121,7 +119,7 @@ npm start
 
 ## 🗂️ Arquitetura do Projeto
 
-```
+```text
 E-commerce/
 ├── prisma/
 │   ├── migrations/
@@ -157,7 +155,9 @@ E-commerce/
 │   │   └── rateLimit.js
 │   └── services/
 │       └── emailService.js
-├── .env
+├── docker-compose.yml
+├── Dockerfile
+├── .env.example
 ├── server.js
 └── package.json
 ```
@@ -167,11 +167,13 @@ E-commerce/
 ## 🛠 Tecnologias
 
 - **Node.js & Express** — Ambiente de execução e framework web
+- **Docker & Docker Compose** — Containerização e orquestração do ambiente
 - **PostgreSQL & Prisma** — Banco de dados relacional e ORM
+- **pgAdmin** — Plataforma de administração visual para o PostgreSQL
 - **Bcrypt.js** — Hash de senhas para segurança
 - **JSON Web Token (JWT)** — Autenticação baseada em tokens
 - **Nodemailer** — Disparo de e-mails para verificação e recuperação de senha
-- **Zod** — Validação de schemas e tipagem dos dados recebidos pela API
+- **Zod** — Validação de schemas e tipagem dos dados
 - **Express Rate Limit** — Proteção contra spam e ataques de força bruta
 
 ---
