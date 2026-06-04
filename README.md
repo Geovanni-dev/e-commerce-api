@@ -16,6 +16,12 @@ API RESTful completa para um e-commerce, com fluxo de autenticação, gestão de
 
 ---
 
+## 🖥️ Sobre o Projeto
+
+![Sobre](./public/imagens/banner-e-commerce.png)
+
+
+
 ## 🗄️ Diagrama do Banco de Dados
 
 ![Diagrama](./public/imagens/diagrama.png)
@@ -24,11 +30,11 @@ API RESTful completa para um e-commerce, com fluxo de autenticação, gestão de
 
 Certifique-se de ter o [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e rodando na sua máquina.
 
-```bash
 # 1. Clone o repositório
 git clone [https://github.com/seu-usuario/e-commerce-api.git](https://github.com/seu-usuario/e-commerce-api.git)
 cd e-commerce-api
 
+```bash
 # 2. Configure as variáveis de ambiente
 # Copie o arquivo .env.example para .env e preencha com seus dados
 cp .env.example .env
@@ -44,14 +50,14 @@ docker-compose exec api npx prisma migrate dev
 * **API:** `http://localhost:3000`
 * **pgAdmin (Banco de Dados):** `http://localhost:8080` (Acesse com as credenciais definidas no `.env`)
 
-> ⚠️ *Rotas protegidas exigem o Header:*
-> `Authorization: Bearer <seu_token_jwt>`
-
-> ⚠️ *Rotas marcadas com 🔒 exigem autenticação. Rotas marcadas com 👑 exigem role de ADMIN.*
 
 ---
 
 ## 📡 Guia de Endpoints & Payloads
+> ⚠️ *Rotas protegidas exigem o Header:*
+> `Authorization: Bearer <seu_token_jwt>`
+
+> ⚠️ *Rotas marcadas com 🔒 exigem autenticação. Rotas marcadas com 👑 exigem role de ADMIN.*
 
 ### 🔐 Autenticação e Usuários (`/user`)
 
