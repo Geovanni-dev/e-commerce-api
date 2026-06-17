@@ -16,10 +16,10 @@ const userSchema = z.object({
 const createAdmin = async () => {  // funcao assincrona
     try {   
     const {name, email, password, role} = userSchema.parse({ // variavel que recebe os dados validados pelo esquema do zod
-            name: 'Admin Segundario',
-            email: 'admin122@example.com',
-            password: 'Admin123',
-            role: 'ADMIN'
+            name: process.env.SEED_USER_NAME || 'admin seed',  // nome do admin
+            email: process.env.SEED_EMAIL || 'admin@example.com', // email do admin
+            password: process.env.SEED_PASSWORD || '123456', // senha do admin
+            role: 'ADMIN' // role do admin
     });
     console.log("Dados validados pelo esquema do zod: "); // imprimindo os dados validados pelo esquema do zod
     
