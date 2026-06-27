@@ -1,4 +1,4 @@
-const {PrismaClient} = require('@prisma/client') // importando o Prisma Client
+const { PrismaClient } = require('@prisma/client'); // importando o Prisma Client
 
 const prisma = new PrismaClient(); // criando uma instância do Prisma Client
 
