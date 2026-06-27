@@ -20,7 +20,7 @@
 
 ## 📋 About
 
-A complete RESTful API for an e-commerce platform, built as a **freelance project**. Covers the full shopping flow: authentication, product and category management, shopping cart, and order checkout. Features data validation via **Zod**, token-based auth with **JWT**, transactional emails via **Nodemailer**, and the **Prisma** ORM connected to **PostgreSQL**. The entire infrastructure is containerized with **Docker**, including a **pgAdmin** panel for database administration. Code quality is enforced with ESLint, Prettier, and EditorConfig.
+A complete RESTful API for an e-commerce platform. Covers the full shopping flow: authentication, product and category management, shopping cart, and order checkout. Features data validation via Zod, token-based auth with JWT, transactional emails via Nodemailer, and the Prisma ORM connected to PostgreSQL. The entire infrastructure is containerized with Docker, including a pgAdmin panel for database administration. Code quality is enforced with ESLint, Prettier, and EditorConfig.
 
 ---
 

@@ -20,7 +20,7 @@
 
 ## 📋 Sobre
 
-API RESTful completa para um e-commerce, desenvolvida como **projeto freelance**. Cobre todo o fluxo de compras: autenticação, gestão de produtos e categorias, carrinho de compras e finalização de pedidos. Conta com validação de dados via **Zod**, autenticação com **JWT**, envio de e-mails via **Nodemailer** e ORM **Prisma** integrado ao **PostgreSQL**. Toda a infraestrutura está containerizada com **Docker**, incluindo painel administrativo **pgAdmin**. A qualidade do código é garantida por ESLint, Prettier e EditorConfig.
+API RESTful completa para um e-commerce. Cobre todo o fluxo de compras: autenticação, gestão de produtos e categorias, carrinho de compras e finalização de pedidos. Conta com validação de dados via Zod, autenticação com JWT, envio de e-mails via Nodemailer e ORM Prisma integrado ao PostgreSQL. Toda a infraestrutura está containerizada com Docker, incluindo painel administrativo pgAdmin. A qualidade do código é garantida por ESLint, Prettier e EditorConfig.
 
 ---
 
