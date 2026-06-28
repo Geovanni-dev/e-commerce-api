@@ -3,9 +3,9 @@ services:
   api:
     build: .
     # Mapeia a porta 3000 do meu host para a porta 3000 interna do container
-    
+
     container_name: e-commerce-api # nome do container para facilitar a identificação e comunicação entre os containers
-    
+
     ports:
       - "3000:3000"
 
